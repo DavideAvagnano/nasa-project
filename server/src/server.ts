@@ -2,7 +2,7 @@ import http from "http";
 import dotenv from "dotenv";
 
 import { app } from "./app";
-import { loadPlanetsData } from "./models/planets-model";
+import { loadPlanetsData } from "./services/planets-service";
 
 dotenv.config();
 const PORT = process.env.PORT || 8000;

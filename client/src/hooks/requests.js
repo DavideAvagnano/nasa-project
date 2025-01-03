@@ -6,9 +6,11 @@ async function httpGetPlanets() {
   return await res.json();
 }
 
+// Load launches, sort by flight number, and return as JSON.
 async function httpGetLaunches() {
-  // TODO: Once API is ready.
-  // Load launches, sort by flight number, and return as JSON.
+  const res = await fetch(`${API_URL}/api/launches`);
+  const fetchedLaunches = await res.json();
+  return fetchedLaunches.sort((a, b) => a.flightNumber - b.flightNumber);
 }
 
 async function httpSubmitLaunch(launch) {

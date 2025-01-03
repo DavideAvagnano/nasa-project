@@ -4,10 +4,11 @@ import cors from "cors";
 import morgan from "morgan";
 
 import planetsRouter from "./routes/planets-router";
+import launchesRouter from "./routes/launches-router";
 
 export const app = express();
 
-// MIDDLEWARE
+// MIDDLEWARES
 app.use(express.json());
 app.use(
   cors({
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 
 // ROUTES
 app.use("/api", planetsRouter);
+app.use("/api", launchesRouter);
 
 // SPA fallback
 app.get("/*", (req: express.Request, res: express.Response) => {
