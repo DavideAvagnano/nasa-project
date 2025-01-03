@@ -30,6 +30,7 @@ yarn-error.log*
 .pnp.js
 
 # Client and Server specific files
+server/public/
 
 # Personal 
 notes.md
