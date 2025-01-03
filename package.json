@@ -1,0 +1,22 @@
+{
+  "name": "nasa-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install:concurrently": "npm install concurrently",
+    "install:server": "npm install --prefix server",
+    "install:client": "npm install --prefix client",
+    "install": "npm run install:concurrently && concurrently \"npm run install:server\" \"npm run install:client\"",
+    "server": "npm start --prefix server",
+    "client": "npm start --prefix client",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
