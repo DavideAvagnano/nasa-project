@@ -1,6 +1,6 @@
 import { Launch } from "../models/launch-model";
 
-export const launches = new Map<any, Launch>();
+export const launches = new Map<number | undefined, Launch>();
 
 let latestFlightNumber = 100;
 
@@ -33,4 +33,19 @@ export const addNewLaunch = (launch: Launch) => {
       flightNumber: latestFlightNumber,
     })
   );
+};
+
+export const existsLaunchWithId = (launchId: number) => {
+  return launches.has(launchId);
+};
+
+export const abortLaunchById = (launchId: number) => {
+  const aborted = launches.get(launchId);
+  if (aborted?.upcoming) {
+    aborted.upcoming = false;
+  }
+  if (aborted?.success) {
+    aborted.success = false;
+  }
+  return aborted;
 };

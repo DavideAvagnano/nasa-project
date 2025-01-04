@@ -1,5 +1,10 @@
 import express from "express";
-import { addNewLaunch, getAllLaunches } from "../services/launches-service";
+import {
+  abortLaunchById,
+  addNewLaunch,
+  existsLaunchWithId,
+  getAllLaunches,
+} from "../services/launches-service";
 import { Launch } from "../models/launch-model";
 
 export const httpGetAllLaunches = (
@@ -35,4 +40,18 @@ export const httpAddNewLaunch = (
 
   addNewLaunch(launch);
   return res.status(201).json(launch);
+};
+
+export const httpAbortLaunch = (
+  req: express.Request,
+  res: express.Response
+) => {
+  const launchId = Number(req.params.id);
+
+  if (!existsLaunchWithId(launchId)) {
+    return res.status(404).json({ error: "launch not found" });
+  }
+
+  const aborted = abortLaunchById(launchId);
+  return res.status(200).json(aborted);
 };

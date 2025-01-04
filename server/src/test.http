@@ -1,4 +1,4 @@
-# REST Client extention in vscode
+# REST Client extention in vscode (alternative to Postman)
 
 ### TEST GET /api/planets
 GET http://localhost:8000/api/planets
@@ -13,6 +13,9 @@ content-type: application/json
 {
     "mission": "ZTM155",
     "rocket": "ZTM Experimental IS1",
-    "destination": "Kepler-186 f",
+    "target": "Kepler-186 f",
     "launchDate": "January 17, 2030"
 }
+
+### TEST DELETE /api/launches/:id
+DELETE http://localhost:8000/api/launches/100
