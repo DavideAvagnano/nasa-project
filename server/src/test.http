@@ -1,0 +1,18 @@
+# REST Client extention in vscode
+
+### TEST GET /api/planets
+GET http://localhost:8000/api/planets
+
+### TEST GET /api/launches
+GET http://localhost:8000/api/launches
+
+### TEST POST /api/launches
+POST http://localhost:8000/api/launches
+content-type: application/json
+
+{
+    "mission": "ZTM155",
+    "rocket": "ZTM Experimental IS1",
+    "destination": "Kepler-186 f",
+    "launchDate": "January 17, 2030"
+}

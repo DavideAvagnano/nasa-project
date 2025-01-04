@@ -39,3 +39,7 @@ export const loadPlanetsData = () => {
       });
   });
 };
+
+export const getAllPlanets = () => {
+  return habitablePlanet;
+};

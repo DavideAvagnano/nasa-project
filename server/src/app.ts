@@ -19,8 +19,8 @@ app.use(morgan("combined"));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 // ROUTES
-app.use("/api", planetsRouter);
-app.use("/api", launchesRouter);
+app.use("/api/planets", planetsRouter);
+app.use("/api/launches", launchesRouter);
 
 // SPA fallback
 app.get("/*", (req: express.Request, res: express.Response) => {
