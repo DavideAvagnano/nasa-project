@@ -1,15 +1,17 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "NodeNext",
-    "moduleResolution": "nodenext",
-    "baseUrl": "src",
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "outDir": "./dist",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "types": ["jest"],
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "src",
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "__tests__/**/*"],
+  "exclude": ["node_modules"]
 }
