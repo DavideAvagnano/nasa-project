@@ -8,7 +8,8 @@
     "test-watch": "jest --watch",
     "build": "rimraf dist && npx tsc",
     "dev": "nodemon",
-    "prod": "npm run build && node dist/server.js"
+    "prod": "npm run build && node dist/server.js",
+    "cluster": "npm run build && pm2 start dist/server.js -i max"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
     "express": "^4.21.2",
     "mongoose": "^8.9.3",
     "morgan": "^1.10.0",
+    "pm2": "^5.4.3",
     "rimraf": "^6.0.1"
   },
   "devDependencies": {

@@ -12,6 +12,7 @@
     "client": "npm start --prefix client",
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "deploy": "npm run build --prefix client && npm run prod --prefix server",
+    "deploy:cluster": "npm run build --prefix client && npm run cluster --prefix server",
     "test:server": "npm test --prefix server",
     "test:client": "npm test --prefix client",
     "test": "npm run test:server && npm run test:client"

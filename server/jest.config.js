@@ -1,7 +1,7 @@
 module.exports = {
   preset: "ts-jest", // Use the ts-jest preset to support TypeScript
   testEnvironment: "node", // Set the test environment to Node.js
-  roots: ["<rootDir>/__tests__"], // The folder where test files are located
+  roots: ["<rootDir>"], // The folder where test files are located
   transform: {
     "^.+\\.ts$": "ts-jest", // Transform TypeScript files using ts-jest
   },
