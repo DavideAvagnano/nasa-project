@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllPlanets } from "../services/planets-service";
+import { getAllPlanets } from "../services/planets";
 
 export const httpGetAllPlanets = (
   req: express.Request,

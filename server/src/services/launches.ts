@@ -1,4 +1,4 @@
-import { Launch } from "../models/launch-model";
+import { Launch } from "../models/launch";
 
 export const launches = new Map<number | undefined, Launch>();
 

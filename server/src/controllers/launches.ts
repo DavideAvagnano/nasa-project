@@ -4,8 +4,8 @@ import {
   addNewLaunch,
   existsLaunchWithId,
   getAllLaunches,
-} from "../services/launches-service";
-import { Launch } from "../models/launch-model";
+} from "../services/launches";
+import { Launch } from "../models/launch";
 
 export const httpGetAllLaunches = (
   req: express.Request,
