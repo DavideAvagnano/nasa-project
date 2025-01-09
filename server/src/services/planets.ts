@@ -1,8 +1,11 @@
 import fs from "fs";
 import path from "path";
 import { parse } from "csv-parse";
-
-export const habitablePlanet: Record<string, any>[] = [];
+import {
+  createPlanet,
+  getPlanetByName,
+  getAllPlanetsNames,
+} from "../models/planet";
 
 const isHabitablePlanet = (planet: Record<string, any>): boolean => {
   return (
@@ -24,22 +27,27 @@ export const loadPlanetsData = () => {
           columns: true,
         })
       )
-      .on("data", (data: Record<string, any>) => {
+      .on("data", async (data: Record<string, any>) => {
         if (isHabitablePlanet(data)) {
-          habitablePlanet.push(data);
+          try {
+            const existingPlanet = await getPlanetByName(data.kepler_name);
+
+            if (!existingPlanet) {
+              await createPlanet({ keplerName: data.kepler_name });
+            }
+          } catch (error) {
+            console.error("Error saving planet:", data.kepler_name, error);
+          }
         }
       })
       .on("error", (err: Error) => {
-        console.error(err);
+        console.error("Error reading CSV file:", err);
         reject(err);
       })
-      .on("end", () => {
-        console.log(`${habitablePlanet.length} habitable planets found`);
+      .on("end", async () => {
+        const countPlanetsFound = (await getAllPlanetsNames()).length;
+        console.log(`${countPlanetsFound} habitable planets found!`);
         resolve();
       });
   });
-};
-
-export const getAllPlanets = () => {
-  return habitablePlanet;
 };
