@@ -1,4 +1,5 @@
 import { Launch, LaunchModel } from "../models/launch";
+import { getPlanetByName } from "../models/planet";
 
 // Loading initial data
 const loadLaunchesData = () => {
@@ -30,6 +31,12 @@ abortLaunchById() → aggiorna il database con lo stato annullato.
 */
 
 const saveLaunch = async (launch: Launch) => {
+  const planet = await getPlanetByName(launch.target);
+
+  if (!planet) {
+    throw new Error("No matching planet found");
+  }
+
   await LaunchModel.updateOne(
     {
       flightNumber: launch.flightNumber,
