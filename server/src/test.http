@@ -18,4 +18,4 @@ content-type: application/json
 }
 
 ### TEST DELETE /api/launches/:id
-DELETE http://localhost:8000/api/launches/100
+DELETE http://localhost:8000/api/launches/105

@@ -17,7 +17,7 @@ const populateLaunches = () => {
 
 // Handling launches
 // const scheduleNewLaunch = () => {};
-const abortLaunchById = () => {};
+// const abortLaunchByFlightNumber = () => {};
 
 /*
 CARICAMENTO INIZIALE
@@ -33,11 +33,6 @@ abortLaunchById() → aggiorna il database con lo stato annullato.
 // --------------------------
 // ---------- HOLD ----------
 // --------------------------
-import { Launch1 } from "../models/launch";
-
-export const launchesMap = new Map<number | undefined, Launch1>();
-
-// let latestFlightNumber = 100;
 const DEFAULT_FLIGHT_NUMBER = 100;
 
 const saveLaunch = async (launch: Launch) => {
@@ -48,13 +43,9 @@ const saveLaunch = async (launch: Launch) => {
   }
 
   await LaunchModel.findOneAndUpdate(
-    {
-      flightNumber: launch.flightNumber,
-    },
+    { flightNumber: launch.flightNumber },
     launch,
-    {
-      upsert: true,
-    }
+    { upsert: true }
   );
 };
 
@@ -69,12 +60,8 @@ const initialLaunch: Launch = {
   success: true,
 };
 
-// launchesMap.set(initialLaunch.flightNumber, initialLaunch);
 saveLaunch(initialLaunch);
 
-// export const getAllLaunches = (): Launch1[] => {
-//   return Array.from(launchesMap.values());
-// };
 export const getAllLaunches = async () => {
   return await LaunchModel.find({}, { _id: 0, __v: 0 });
 };
@@ -89,18 +76,6 @@ const getLatestFlightNumber = async () => {
   return latestLaunch?.flightNumber ?? DEFAULT_FLIGHT_NUMBER;
 };
 
-// export const addNewLaunch = (launch: Launch1) => {
-//   latestFlightNumber++;
-//   launchesMap.set(
-//     latestFlightNumber,
-//     Object.assign(launch, {
-//       success: true,
-//       upcoming: true,
-//       customers: ["Zero to Mastery", "NASA"],
-//       flightNumber: latestFlightNumber,
-//     })
-//   );
-// };
 export const scheduleNewLaunch = async (launch: Launch) => {
   const newFlightNumber = (await getLatestFlightNumber()) + 1;
 
@@ -114,17 +89,15 @@ export const scheduleNewLaunch = async (launch: Launch) => {
   await saveLaunch(newLaunch);
 };
 
-export const existsLaunchWithId = (launchId: number) => {
-  return launchesMap.has(launchId);
+export const getLaunchByFlightNumber = async (flightNumber: number) => {
+  return await LaunchModel.findOne({ flightNumber });
 };
 
-export const abortLaunchById1 = (launchId: number) => {
-  const aborted = launchesMap.get(launchId);
-  if (aborted?.upcoming) {
-    aborted.upcoming = false;
-  }
-  if (aborted?.success) {
-    aborted.success = false;
-  }
-  return aborted;
+export const abortLaunchByFlightNumber = async (flightNumber: number) => {
+  const aborted = await LaunchModel.updateOne(
+    { flightNumber },
+    { upcoming: false, success: false }
+  );
+
+  return aborted.acknowledged && aborted.modifiedCount > 0;
 };
