@@ -1,11 +1,11 @@
 import express from "express";
 import {
   abortLaunchById1,
-  addNewLaunch,
   existsLaunchWithId,
   getAllLaunches,
+  scheduleNewLaunch,
 } from "../services/launches";
-import { Launch1 as Launch } from "../models/launch";
+import { Launch } from "../models/launch";
 
 // GET /api/launches
 export const httpGetAllLaunches = async (
@@ -17,7 +17,7 @@ export const httpGetAllLaunches = async (
 };
 
 // POST /api/launches
-export const httpAddNewLaunch = (
+export const httpAddNewLaunch = async (
   req: express.Request,
   res: express.Response
 ) => {
@@ -36,7 +36,7 @@ export const httpAddNewLaunch = (
       error: "Invalid launch date",
     });
   }
-  addNewLaunch(launch);
+  await scheduleNewLaunch(launch);
   return res.status(201).json(launch);
 };
 

@@ -37,7 +37,7 @@ const LaunchSchema = new mongoose.Schema({
 export const LaunchModel = mongoose.model("Launch", LaunchSchema);
 
 // Actions
-export const saveLaunch = (launch: Launch) => {
+const saveLaunch = (launch: Launch) => {
   return LaunchModel.findOneAndUpdate(
     {
       flightNumber: launch.flightNumber,
@@ -48,7 +48,6 @@ export const saveLaunch = (launch: Launch) => {
     }
   );
 };
-
 const findLaunch = () => {
   // findLaunch(filter)
 };

@@ -11,9 +11,9 @@ POST http://localhost:8000/api/launches
 content-type: application/json
 
 {
-    "mission": "ZTM155",
+    "mission": "test 1 mission",
     "rocket": "ZTM Experimental IS1",
-    "target": "Kepler-186 f",
+    "target": "Kepler-62 f",
     "launchDate": "January 17, 2030"
 }
 

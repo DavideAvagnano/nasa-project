@@ -16,7 +16,7 @@ const populateLaunches = () => {
 };
 
 // Handling launches
-const scheduleNewLaunch = () => {};
+// const scheduleNewLaunch = () => {};
 const abortLaunchById = () => {};
 
 /*
@@ -30,6 +30,16 @@ ANULLAMENTO DI UN LANCIO
 abortLaunchById() → aggiorna il database con lo stato annullato.
 */
 
+// --------------------------
+// ---------- HOLD ----------
+// --------------------------
+import { Launch1 } from "../models/launch";
+
+export const launchesMap = new Map<number | undefined, Launch1>();
+
+// let latestFlightNumber = 100;
+const DEFAULT_FLIGHT_NUMBER = 100;
+
 const saveLaunch = async (launch: Launch) => {
   const planet = await getPlanetByName(launch.target);
 
@@ -37,7 +47,7 @@ const saveLaunch = async (launch: Launch) => {
     throw new Error("No matching planet found");
   }
 
-  await LaunchModel.updateOne(
+  await LaunchModel.findOneAndUpdate(
     {
       flightNumber: launch.flightNumber,
     },
@@ -47,15 +57,6 @@ const saveLaunch = async (launch: Launch) => {
     }
   );
 };
-
-// --------------------------
-// ---------- HOLD ----------
-// --------------------------
-import { Launch1 } from "../models/launch";
-
-export const launchesMap = new Map<number | undefined, Launch1>();
-
-let latestFlightNumber = 100;
 
 const initialLaunch: Launch = {
   flightNumber: 100,
@@ -78,17 +79,39 @@ export const getAllLaunches = async () => {
   return await LaunchModel.find({}, { _id: 0, __v: 0 });
 };
 
-export const addNewLaunch = (launch: Launch1) => {
-  latestFlightNumber++;
-  launchesMap.set(
-    latestFlightNumber,
-    Object.assign(launch, {
-      success: true,
-      upcoming: true,
-      customers: ["Zero to Mastery", "NASA"],
-      flightNumber: latestFlightNumber,
-    })
-  );
+const getLatestFlightNumber = async () => {
+  const latestLaunch = await LaunchModel.findOne().sort("-flightNumber");
+
+  if (!latestLaunch) {
+    return DEFAULT_FLIGHT_NUMBER;
+  }
+
+  return latestLaunch?.flightNumber ?? DEFAULT_FLIGHT_NUMBER;
+};
+
+// export const addNewLaunch = (launch: Launch1) => {
+//   latestFlightNumber++;
+//   launchesMap.set(
+//     latestFlightNumber,
+//     Object.assign(launch, {
+//       success: true,
+//       upcoming: true,
+//       customers: ["Zero to Mastery", "NASA"],
+//       flightNumber: latestFlightNumber,
+//     })
+//   );
+// };
+export const scheduleNewLaunch = async (launch: Launch) => {
+  const newFlightNumber = (await getLatestFlightNumber()) + 1;
+
+  const newLaunch = Object.assign(launch, {
+    success: true,
+    upcoming: true,
+    customers: ["Davide", "NASA"],
+    flightNumber: newFlightNumber,
+  });
+
+  await saveLaunch(newLaunch);
 };
 
 export const existsLaunchWithId = (launchId: number) => {
