@@ -1,16 +1,5 @@
 import mongoose from "mongoose";
 
-export interface Launch1 {
-  flightNumber?: number;
-  launchDate?: Date;
-  mission?: string;
-  rocket?: string;
-  target?: string;
-  customers?: string[];
-  success?: boolean;
-  upcoming?: boolean;
-}
-
 export interface Launch {
   flightNumber: number;
   launchDate: Date;
@@ -35,28 +24,3 @@ const LaunchSchema = new mongoose.Schema({
 });
 
 export const LaunchModel = mongoose.model("Launch", LaunchSchema);
-
-// Actions
-const saveLaunch = (launch: Launch) => {
-  return LaunchModel.findOneAndUpdate(
-    {
-      flightNumber: launch.flightNumber,
-    },
-    launch,
-    {
-      upsert: true,
-    }
-  );
-};
-const findLaunch = () => {
-  // findLaunch(filter)
-};
-const getLaunchById = () => {
-  // getLaunchById(launchId)
-};
-const getLatestFlightNumber = () => {
-  // getLatestFlightNumber()
-};
-const getAllLaunches = () => {
-  // getAllLaunches(skip, limit)
-};
