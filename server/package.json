@@ -4,7 +4,7 @@
   "description": "NASA Mission Controll API",
   "main": "src/server.ts",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "test-watch": "jest --watch",
     "build": "rimraf dist && npx tsc",
     "dev": "nodemon",
