@@ -1,13 +1,13 @@
 # REST Client extention in vscode (alternative to Postman)
 
-### TEST GET /api/planets
-GET http://localhost:8000/api/planets
+### TEST GET /v1/api/planets
+GET http://localhost:8000/v1/api/planets
 
-### TEST GET /api/launches
-GET http://localhost:8000/api/launches
+### TEST GET /v1/api/launches
+GET http://localhost:8000/v1/api/launches
 
-### TEST POST /api/launches
-POST http://localhost:8000/api/launches
+### TEST POST /v1/api/launches
+POST http://localhost:8000/v1/api/launches
 content-type: application/json
 
 {
@@ -17,5 +17,5 @@ content-type: application/json
     "launchDate": "January 17, 2030"
 }
 
-### TEST DELETE /api/launches/:id
-DELETE http://localhost:8000/api/launches/105
+### TEST DELETE /v1/api/launches/:id
+DELETE http://localhost:8000/v1/api/launches/114

@@ -3,8 +3,7 @@ import express from "express";
 import cors from "cors";
 import morgan from "morgan";
 
-import planetsRouter from "./routes/planets";
-import launchesRouter from "./routes/launches";
+import v1Router from "./routes/v1";
 
 export const app = express();
 
@@ -19,8 +18,7 @@ app.use(morgan("combined"));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
 // ROUTES
-app.use("/api/planets", planetsRouter);
-app.use("/api/launches", launchesRouter);
+app.use("/v1", v1Router);
 
 // SPA fallback
 app.get("/*", (req: express.Request, res: express.Response) => {
