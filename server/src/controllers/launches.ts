@@ -8,13 +8,16 @@ import {
   abortLaunchByFlightNumber,
   scheduleNewLaunch,
 } from "../services/launches";
+import { getPagination } from "../services/query";
 
 // GET /api/launches
 export const httpGetAllLaunches = async (
   req: express.Request,
   res: express.Response
 ) => {
-  const launches = await getAllLaunches();
+  const { skip, limit } = getPagination(req.query);
+
+  const launches = await getAllLaunches(skip, limit);
   return res.status(200).json(launches);
 };
 

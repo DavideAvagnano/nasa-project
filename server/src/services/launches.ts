@@ -15,19 +15,6 @@ interface Payload {
   customers: string[];
 }
 
-const initialLaunch: Launch = {
-  flightNumber: 100,
-  mission: "Kepler Exploration X",
-  rocket: "Explorer IS1",
-  launchDate: new Date("December 27, 2030"),
-  target: "Kepler-442 b",
-  customers: ["ZTM", "NASA"],
-  upcoming: true,
-  success: true,
-};
-
-saveLaunch(initialLaunch);
-
 // Loading initial data
 export const loadLaunchesData = async () => {
   const firstLaunch = await findLaunch({

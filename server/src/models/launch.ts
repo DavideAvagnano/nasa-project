@@ -25,11 +25,14 @@ const LaunchSchema = new mongoose.Schema({
   success: { type: Boolean, required: true, default: true },
 });
 
-export const LaunchModel = mongoose.model("Launch", LaunchSchema);
+export const LaunchModel = mongoose.model<Launch>("Launch", LaunchSchema);
 
 // Actions
-export const getAllLaunches = () => {
-  return LaunchModel.find({}, { _id: 0, __v: 0 });
+export const getAllLaunches = (skip: number, limit: number) => {
+  return LaunchModel.find({}, { _id: 0, __v: 0 })
+    .sort({ flightNumber: 1 })
+    .skip(skip)
+    .limit(limit);
 };
 
 export const findLaunch = (filter: Partial<Launch>) => {
