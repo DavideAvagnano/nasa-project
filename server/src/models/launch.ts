@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+const DEFAULT_FLIGHT_NUMBER = 100;
+
 export interface Launch {
   flightNumber: number;
   launchDate: Date;
@@ -24,3 +26,34 @@ const LaunchSchema = new mongoose.Schema({
 });
 
 export const LaunchModel = mongoose.model("Launch", LaunchSchema);
+
+// Actions
+export const getAllLaunches = () => {
+  return LaunchModel.find({}, { _id: 0, __v: 0 });
+};
+
+export const findLaunch = (filter: Partial<Launch>) => {
+  return LaunchModel.findOne(filter);
+};
+
+export const getLaunchByFlightNumber = (flightNumber: number) => {
+  return findLaunch({ flightNumber });
+};
+
+export const getLatestFlightNumber = async () => {
+  const latestLaunch = await LaunchModel.findOne().sort("-flightNumber");
+
+  if (!latestLaunch) {
+    return DEFAULT_FLIGHT_NUMBER;
+  }
+
+  return latestLaunch?.flightNumber ?? DEFAULT_FLIGHT_NUMBER;
+};
+
+export const saveLaunch = (launch: Launch) => {
+  return LaunchModel.findOneAndUpdate(
+    { flightNumber: launch.flightNumber },
+    launch,
+    { upsert: true }
+  );
+};

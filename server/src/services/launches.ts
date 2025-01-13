@@ -1,22 +1,19 @@
 import axios from "axios";
 import { getPlanetByName } from "../models/planet";
-import { Launch, LaunchModel } from "../models/launch";
+import {
+  findLaunch,
+  getLatestFlightNumber,
+  Launch,
+  LaunchModel,
+  saveLaunch,
+} from "../models/launch";
 
 const SPACEX_API_URL = "https://api.spacexdata.com/v4/launches/query";
-const DEFAULT_FLIGHT_NUMBER = 100;
 
 interface Payload {
   id: string;
   customers: string[];
 }
-
-const saveLaunch = async (launch: Launch) => {
-  await LaunchModel.findOneAndUpdate(
-    { flightNumber: launch.flightNumber },
-    launch,
-    { upsert: true }
-  );
-};
 
 const initialLaunch: Launch = {
   flightNumber: 100,
@@ -95,28 +92,6 @@ const populateLaunches = async () => {
 };
 
 // Handling launches
-export const getAllLaunches = async () => {
-  return await LaunchModel.find({}, { _id: 0, __v: 0 });
-};
-
-const findLaunch = async (filter: Partial<Launch>) => {
-  return await LaunchModel.findOne(filter);
-};
-
-export const getLaunchByFlightNumber = async (flightNumber: number) => {
-  return await findLaunch({ flightNumber });
-};
-
-const getLatestFlightNumber = async () => {
-  const latestLaunch = await LaunchModel.findOne().sort("-flightNumber");
-
-  if (!latestLaunch) {
-    return DEFAULT_FLIGHT_NUMBER;
-  }
-
-  return latestLaunch?.flightNumber ?? DEFAULT_FLIGHT_NUMBER;
-};
-
 export const scheduleNewLaunch = async (launch: Launch) => {
   const planet = await getPlanetByName(launch.target!);
 

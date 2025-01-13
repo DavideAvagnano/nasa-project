@@ -1,11 +1,13 @@
 import express from "express";
 import {
-  abortLaunchByFlightNumber,
   getAllLaunches,
   getLaunchByFlightNumber,
+  Launch,
+} from "../models/launch";
+import {
+  abortLaunchByFlightNumber,
   scheduleNewLaunch,
 } from "../services/launches";
-import { Launch } from "../models/launch";
 
 // GET /api/launches
 export const httpGetAllLaunches = async (
