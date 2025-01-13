@@ -1,15 +1,16 @@
-import { Launch, LaunchModel } from "../models/launch";
+import axios from "axios";
 import { getPlanetByName } from "../models/planet";
+import { Launch, LaunchModel } from "../models/launch";
 
+const SPACEX_API_URL = "https://api.spacexdata.com/v4/launches/query";
 const DEFAULT_FLIGHT_NUMBER = 100;
 
+interface Payload {
+  id: string;
+  customers: string[];
+}
+
 const saveLaunch = async (launch: Launch) => {
-  const planet = await getPlanetByName(launch.target);
-
-  if (!planet) {
-    throw new Error("No matching planet found");
-  }
-
   await LaunchModel.findOneAndUpdate(
     { flightNumber: launch.flightNumber },
     launch,
@@ -31,17 +32,66 @@ const initialLaunch: Launch = {
 saveLaunch(initialLaunch);
 
 // Loading initial data
-const loadLaunchesData = () => {
-  /*
-    controlla se i dati dei lanci sono gia stati caricati cercando il primo lancio nel database, se esiste termina il caricamento, altrimenti richiama la funzione populateLaunches() per scaricare e salvere i dati da SpaceX
-  */
+export const loadLaunchesData = async () => {
+  const firstLaunch = await findLaunch({
+    flightNumber: 1,
+    rocket: "Falcon 1",
+    mission: "FalconSat",
+  });
+
+  if (firstLaunch) {
+    console.log("Launches data already loaded!");
+  } else {
+    await populateLaunches();
+  }
 };
 
 // Download and save data
-const populateLaunches = () => {
-  /*
-    Effettua richiesta POST all'API SpaceX per ottenere tutti i lanci, elabora i dati per estrarre info necessarie (missione, razzo, ecc), chiama la funzinoe per salvare ogni lancio nel database
-  */
+const populateLaunches = async () => {
+  console.log("Downloading launches data...");
+
+  const res = await axios.post(SPACEX_API_URL, {
+    query: {},
+    options: {
+      pagination: false,
+      populate: [
+        {
+          path: "rocket",
+          select: { name: 1 },
+        },
+        {
+          path: "payloads",
+          select: { customers: 1 },
+        },
+      ],
+    },
+  });
+
+  if (res.status !== 200) {
+    console.log("Problem downloading launch data");
+    throw new Error("Launch data download failed");
+  }
+
+  const launchDocs = res.data.docs;
+
+  for (const launchDoc of launchDocs) {
+    const payloads: Payload[] = launchDoc["payloads"];
+    const customers = payloads.flatMap((payloads) => payloads["customers"]);
+
+    const launch = {
+      flightNumber: launchDoc["flight_number"],
+      mission: launchDoc["name"],
+      rocket: launchDoc["rocket"]["name"],
+      launchDate: launchDoc["date_local"],
+      upcoming: launchDoc["upcoming"],
+      success: launchDoc["success"],
+      customers,
+    };
+
+    console.log(`${launch.flightNumber} ${launch.mission}`);
+
+    await saveLaunch(launch);
+  }
 };
 
 // Handling launches
@@ -49,8 +99,12 @@ export const getAllLaunches = async () => {
   return await LaunchModel.find({}, { _id: 0, __v: 0 });
 };
 
+const findLaunch = async (filter: Partial<Launch>) => {
+  return await LaunchModel.findOne(filter);
+};
+
 export const getLaunchByFlightNumber = async (flightNumber: number) => {
-  return await LaunchModel.findOne({ flightNumber });
+  return await findLaunch({ flightNumber });
 };
 
 const getLatestFlightNumber = async () => {
@@ -64,6 +118,12 @@ const getLatestFlightNumber = async () => {
 };
 
 export const scheduleNewLaunch = async (launch: Launch) => {
+  const planet = await getPlanetByName(launch.target!);
+
+  if (!planet) {
+    throw new Error("No matching planet found");
+  }
+
   const newFlightNumber = (await getLatestFlightNumber()) + 1;
 
   const newLaunch = Object.assign(launch, {
@@ -84,14 +144,3 @@ export const abortLaunchByFlightNumber = async (flightNumber: number) => {
 
   return aborted.acknowledged && aborted.modifiedCount > 0;
 };
-
-/*
-CARICAMENTO INIZIALE
-loadLaunchData() → chiama → findLaunch() per controllare i dati → altrimenti → populateLaunches() → usa → saveLaunch().
-
-AGGIUNTA DI UN NUOVO LANCIO
-scheduleNewLaunch() → chiama → getPlanetByName() per validare il target → usa → getLatestFlightNumber() per generare un numero di volo → chiama → saveLaunch() per salvare il nuovo lancio.
-
-ANULLAMENTO DI UN LANCIO
-abortLaunchById() → aggiorna il database con lo stato annullato.
-*/

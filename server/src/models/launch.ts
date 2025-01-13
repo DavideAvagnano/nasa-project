@@ -5,7 +5,7 @@ export interface Launch {
   launchDate: Date;
   mission: string;
   rocket: string;
-  target: string;
+  target?: string;
   customers: string[];
   upcoming: boolean;
   success: boolean;
